@@ -1,0 +1,9 @@
+.Rproj.user/
+node_modules/
+
+# History files
+.Rhistory
+.Rapp.history
+
+# Session Data files
+.RData
