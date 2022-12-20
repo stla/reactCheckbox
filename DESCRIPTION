@@ -1,0 +1,20 @@
+Package: reactCheckbox
+Title: Checkbox Group Input for 'Shiny'
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Stéphane", "Laurent", , "laurent_step@outlook.fr", role = c("aut", "cre")),
+    person("Paul", "Popov", role = "cph",
+           comment = "'react-input-checkbox' library")
+  )
+Description: Provides a checkbox group input for usage in a 'Shiny'
+    application. The checkbox group has a head checkbox allowing to check
+    or uncheck all the checkboxes in the group. The checkboxes are
+    customizable.
+License: GPL (>= 3)
+Imports: 
+    htmltools,
+    reactR
+Suggests: 
+    shiny
+Encoding: UTF-8
+RoxygenNote: 7.2.3
