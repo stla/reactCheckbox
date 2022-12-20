@@ -85,9 +85,6 @@ const App = (props) => {
     falseValues[i] = false;
   }
 
-  const labels = props.labels;
-  const classes = props.classes;
-
   React.useEffect(() => {
     if(allTrue()) {
       setAll(2);
@@ -121,6 +118,8 @@ const App = (props) => {
     props.setShinyValue(values);
   };
 
+  const labels = props.labels;
+  const classes = props.classes;
   const theme = props.theme;
   const styles = makeStyle(props.theme, props.styles);
 
@@ -172,7 +171,7 @@ const ReactCheckBoxInput = ({ configuration, value, setValue }) => {
       theme={configuration.theme + "-checkbox"} 
       labels={configuration.labels.map(parselabel)}
       classes={configuration.classes}
-      headLabel={configuration.headLabel}
+      headLabel={parselabel(configuration.headLabel)}
       headClass={configuration.headClass}
       styles={configuration.styles}
       setShinyValue={setValue} 

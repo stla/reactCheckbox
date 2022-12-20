@@ -6,13 +6,19 @@ isString <- function(x) {
   is.character(x) && length(x) == 1L && !is.na(x)
 }
 
-#' Title
+#' @title Define a checkbox
+#' @description Define a checkbox by its label, its value, and optionally a
+#'   CSS class.
 #'
-#' @param label label
-#' @param value value
-#' @param class class
+#' @param label the label of the checkbox, can be an ordinary character string,
+#'   a \code{html} character string made with the \code{\link[htmltools]{HTML}}
+#'   function, or a \code{shiny.tag} object
+#' @param value the initial value of the checkbox, \code{TRUE} (checked), or
+#'   \code{FALSE} (unchecked)
+#' @param class the name of a CSS class to attach to the checkbox, that should
+#'   be defined with \code{\link{checkboxStyle}}
 #'
-#' @return x
+#' @return A named list, to be used in \code{\link{reactCheckboxesInput}}.
 #' @export
 checkbox <- function(label, value, class = "") {
   stopifnot(isBoolean(value))
@@ -25,50 +31,135 @@ checkbox <- function(label, value, class = "") {
   list("label" = label, "value" = value, "class" = class)
 }
 
-#' Title
+#' @title Checkbox style.
+#' @description Define CSS styles for a checkbox.
 #'
-#' @param checked x
-#' @param checked_hover x
-#' @param unchecked x
-#' @param unchecked_hover x
-#' @param indeterminate x
-#' @param indeterminate_hover x
+#' @param checked styles for the checkbox in checked state
+#' @param checked_hover styles for the checkbox in checked state on hover
+#' @param unchecked styles for the checkbox in unchecked state
+#' @param unchecked_hover styles for the checkbox in unchecked state on hover
+#' @param indeterminate styles for the checkbox in indeterminate state (for
+#'   the head checkbox)
+#' @param indeterminate_hover styles for the checkbox in indeterminate state
+#'   on hover
 #'
-#' @return x
+#' @return A named list, to be used in \code{\link{reactCheckboxesInput}}.
 #' @export
+#' @examples
+#' library(htmltools) # provides the convenient function `css`
+#' checkboxStyle(
+#'   checked = css(
+#'     background.color = "rgba(255, 82, 82, 0.87)",
+#'     border.color = "black"
+#'   ),
+#'   checked_hover = css(
+#'     background.color = "darkred",
+#'     border.color = "darkred"
+#'   )
+#' )
 checkboxStyle <- function(
   checked = NULL, checked_hover = NULL,
   unchecked = NULL, unchecked_hover = NULL,
   indeterminate = NULL, indeterminate_hover = NULL
 ){
   styles <- list(
-    ":checked" = checked,
-    ":checked:hover" = checked_hover,
-    " " = unchecked,
-    ":hover" = unchecked_hover,
-    "_indeterminate" = indeterminate,
+    ":checked"             = checked,
+    ":checked:hover"       = checked_hover,
+    " "                    = unchecked,
+    ":hover"               = unchecked_hover,
+    "_indeterminate"       = indeterminate,
     "_indeterminate:hover" = indeterminate_hover
   )
   Filter(Negate(is.null), styles)
 }
 
-#' Add Title
+#' @title Checkbox group input
+#' @description Create a checkbox group input for usage in Shiny.
 #'
-#' <Add Description>
+#' @param inputId the id that will be used to get the values in Shiny
+#' @param checkboxes a list of checkboxes defined with the
+#'   \code{\link{checkbox}} function
+#' @param headLabel the label for the head checkbox
+#' @param headClass a CSS class for the head checkbox
+#' @param styles a named list of styles created with the
+#'   \code{\link{checkboxStyle}} function; the names denote the CSS classes
+#' @param theme the theme, \code{"bootstrap"}, \code{"fancy"}, or
+#'   \code{"material"}
+#'
+#' @returns A \code{shiny.tag.list} object to be included in a Shiny UI.
 #'
 #' @importFrom reactR createReactShinyInput
 #' @importFrom htmltools htmlDependency tags
 #'
 #' @export
-reactCheckboxInput <- function(
+#' @examples
+#' library(shiny)
+#' library(htmltools)
+#' library(reactCheckbox)
+#'
+#' ui <- fluidPage(
+#'   reactCheckboxesInput(
+#'     "iris",
+#'     list(
+#'       checkbox("Sepal length", FALSE),
+#'       checkbox("Sepal width", FALSE),
+#'       checkbox("Petal length", FALSE),
+#'       checkbox("Petal width", FALSE)
+#'     ),
+#'     headLabel = tags$span(
+#'       "Make a choice", style = "font-size: 1.8rem; font-style: italic;"
+#'     ),
+#'     headClass = "custom",
+#'     theme = "material",
+#'     styles = list(
+#'       "custom" = checkboxStyle(
+#'         checked = css(
+#'           background.color = "darkred"
+#'         ),
+#'         checked_hover = css(
+#'           background.color = "maroon"
+#'         ),
+#'         unchecked = css(
+#'           background.color = "darkorange"
+#'         ),
+#'         unchecked_hover = css(
+#'           background.color = "orange"
+#'         ),
+#'         indeterminate = css(
+#'           background.color = "gold"
+#'         ),
+#'         indeterminate_hover = css(
+#'           background.color = "yellow"
+#'         )
+#'       )
+#'     )
+#'   )
+#' )
+#'
+#' server <- function(input, output, session) {
+#'   observe({
+#'     print(input[["iris"]])
+#'   })
+#' }
+#'
+#' if(interactive()) {
+#'   shinyApp(ui, server)
+#' }
+reactCheckboxesInput <- function(
     inputId, checkboxes,
     headLabel = "Check all", headClass = "",
-    styles = NULL, theme = "bootstrap"
+    styles = NULL, theme = "material"
 ) {
-  reactR::createReactShinyInput(
+  theme <- match.arg(theme, c("bootstrap", "fancy", "material"))
+  if(inherits(headLabel, "html") || inherits(headLabel, "shiny.tag")) {
+    headLabel = list("__html" = URLencode(as.character(headLabel)))
+  } else {
+    stopifnot(isString(headLabel))
+  }
+  createReactShinyInput(
     inputId,
     "reactCheckbox",
-    htmltools::htmlDependency(
+    htmlDependency(
       name = "reactCheckbox-input",
       version = "1.0.0",
       src = "www/reactCheckbox/reactCheckbox",
@@ -84,7 +175,7 @@ reactCheckboxInput <- function(
       "headClass" = headClass,
       "styles" = styles
     ),
-    container = htmltools::tags$div
+    container = tags$div
   )
 }
 
