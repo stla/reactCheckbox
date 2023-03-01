@@ -13,7 +13,8 @@ Description: Provides a checkbox group input for usage in a 'Shiny'
 License: GPL (>= 3)
 Imports: 
     htmltools,
-    reactR
+    reactR,
+    utils
 Suggests: 
     shiny
 Encoding: UTF-8

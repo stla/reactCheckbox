@@ -90,6 +90,7 @@ checkboxStyle <- function(
 #'
 #' @importFrom reactR createReactShinyInput
 #' @importFrom htmltools htmlDependency tags
+#' @importFrom utils URLencode
 #'
 #' @export
 #' @examples
