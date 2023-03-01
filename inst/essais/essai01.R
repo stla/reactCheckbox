@@ -3,6 +3,7 @@ library(htmltools)
 library(reactCheckbox)
 
 ui <- fluidPage(
+  br(),
   reactCheckboxesInput(
     "iris",
     list(
