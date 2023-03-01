@@ -4959,7 +4959,15 @@ var ReactCheckBoxInput = _ref => {
     setShinyValue: setValue
   });
 };
-(0,reactR__WEBPACK_IMPORTED_MODULE_0__.reactShinyInput)(".reactCheckbox", "reactCheckbox.reactCheckbox", ReactCheckBoxInput);
+(0,reactR__WEBPACK_IMPORTED_MODULE_0__.reactShinyInput)(".reactCheckbox", "reactCheckbox.reactCheckbox", ReactCheckBoxInput, {
+  receiveMessage: function receiveMessage(el, data) {
+    var config = this.getInputConfiguration(el);
+    this.unsubscribe(el);
+    this.setInputConfiguration(el, config);
+    this.setValue(el, data.values);
+    this.render(el);
+  }
+});
 })();
 
 /******/ })()

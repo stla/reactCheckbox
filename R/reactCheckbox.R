@@ -179,13 +179,21 @@ reactCheckboxesInput <- function(
   )
 }
 
-#' Add Title
+#' @title Update a react checkboxes widget
+#' @description Change the values of a react checkboxes input.
 #'
-#' <Add Description>
+#' @param session the Shiny \code{session} object
+#' @param inputId the id of the react checkboxes widget to be updated
+#' @param values new values (vector of \code{TRUE} or \code{FALSE} values)
+#'
+#' @return No returned value, called for side effect.
 #'
 #' @export
-updateReactCheckboxInput <- function(session, inputId, value, configuration = NULL) {
-  message <- list(value = value)
-  if (!is.null(configuration)) message$configuration <- configuration
-  session$sendInputMessage(inputId, message);
+updateReactCheckboxInput <- function(session, inputId, values) {
+  check <- all(vapply(values, is.logical, logical(1L)))
+  if(!check) {
+    stop("Invalid `values` argument.")
+  }
+  message <- list(values = values)
+  session$sendInputMessage(inputId, message)
 }

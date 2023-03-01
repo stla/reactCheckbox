@@ -25,7 +25,7 @@ const isHTML = (x) => {
 const parselabel = (label) => {
   if(isHTML(label)) {
     return parse(unescapeHtml(decodeURI(label.__html)));
-  } 
+  }
   return label;
 };
 
@@ -41,7 +41,7 @@ const makeStyle = (theme, styles) => {
       style = style + `.${theme}__input${what} + ${sibling} {${css[what]}}`;
     }
   }
-  return {__html: style};   
+  return {__html: style};
 };
 
 const App = (props) => {
@@ -56,7 +56,7 @@ const App = (props) => {
     }
     return true;
   };
-  
+
   const allFalse = () => {
     for(const x of values) {
       if(x) {
@@ -65,7 +65,7 @@ const App = (props) => {
     }
     return true;
   };
-  
+
   let status;
   if(allTrue()) {
     status = 2;
@@ -154,10 +154,10 @@ const App = (props) => {
       </ul>
 
       {styles ?
-        <style 
-          dangerouslySetInnerHTML={styles} 
+        <style
+          dangerouslySetInnerHTML={styles}
         />
-        : null 
+        : null
       }
 
     </div>
@@ -166,15 +166,15 @@ const App = (props) => {
 
 const ReactCheckBoxInput = ({ configuration, value, setValue }) => {
   return (
-    <App 
+    <App
       value={value}
-      theme={configuration.theme + "-checkbox"} 
+      theme={configuration.theme + "-checkbox"}
       labels={configuration.labels.map(parselabel)}
       classes={configuration.classes}
       headLabel={parselabel(configuration.headLabel)}
       headClass={configuration.headClass}
       styles={configuration.styles}
-      setShinyValue={setValue} 
+      setShinyValue={setValue}
     />
   );
 };
@@ -182,5 +182,14 @@ const ReactCheckBoxInput = ({ configuration, value, setValue }) => {
 reactShinyInput(
   ".reactCheckbox",
   "reactCheckbox.reactCheckbox",
-  ReactCheckBoxInput
+  ReactCheckBoxInput,
+  {
+    receiveMessage: function(el, data){
+      let config = this.getInputConfiguration(el);
+      this.unsubscribe(el);
+      this.setInputConfiguration(el, config);
+      this.setValue(el, data.values);
+      this.render(el);
+    }
+  }
 );

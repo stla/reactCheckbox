@@ -2,10 +2,20 @@
 % Please edit documentation in R/reactCheckbox.R
 \name{updateReactCheckboxInput}
 \alias{updateReactCheckboxInput}
-\title{Add Title}
+\title{Update a react checkboxes widget}
 \usage{
-updateReactCheckboxInput(session, inputId, value, configuration = NULL)
+updateReactCheckboxInput(session, inputId, values)
+}
+\arguments{
+\item{session}{the Shiny \code{session} object}
+
+\item{inputId}{the id of the react checkboxes widget to be updated}
+
+\item{values}{new values (vector of \code{TRUE} or \code{FALSE} values)}
+}
+\value{
+No returned value, called for side effect.
 }
 \description{
-<Add Description>
+Change the values of a react checkboxes input.
 }
